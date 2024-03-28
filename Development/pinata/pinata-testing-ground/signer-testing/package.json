@@ -1,0 +1,19 @@
+{
+  "name": "signer-testing",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun index.ts",
+    "dev": "bun --hot index.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^2.0.0",
+    "viem": "^2.8.14"
+  }
+}
