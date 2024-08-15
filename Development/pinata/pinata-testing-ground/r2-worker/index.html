@@ -1,0 +1,89 @@
+<html>
+    <body>
+        <div>
+            <input type="file" id="fileUpload" />
+            <button id="uploadButton" onclick="uploadFile()">Upload</button>
+        </div>
+        <script>
+
+            async function uploadFile() {
+                // 1 configure the base url and bucket name 
+                const BASE_CF_URL = 'http://localhost:8787';
+
+                const file = document.getElementById('fileUpload').files[0];
+
+                const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
+                const totalParts = Math.ceil(file.size / CHUNK_SIZE);
+
+                const fileName = file.name;
+
+                // 2 initiate the upload
+                const getMutltiPartUploadUrl = new URL(`${BASE_CF_URL}/getMultiPartUpload`);
+                getMutltiPartUploadUrl.searchParams.append('filename', fileName)
+
+
+                const uploadIdResponse = await fetch(getMutltiPartUploadUrl, {
+                    method: 'GET'
+                });
+
+                const multiPartUploadJson = await uploadIdResponse.json();
+
+                console.log('multiPartUploadJson', multiPartUploadJson);
+
+                const uploadId = multiPartUploadJson.response.UploadId;
+                console.log('uploadId', uploadId);
+
+                const key = multiPartUploadJson.response.key
+                console.log('key', key)
+
+                // 3 upload the parts
+                const partsData = [];
+                const uploadPartUrl = new URL(`${BASE_CF_URL}/uploadPart`);
+                uploadPartUrl.searchParams.append('key', key);
+                uploadPartUrl.searchParams.append('uploadId', uploadId);
+
+                for (let i = 0; i < totalParts; i++) {
+                    const start = CHUNK_SIZE * i;
+                    const end = Math.min(file.size, start + CHUNK_SIZE);
+                    const blob = file.slice(start, end);
+                    const partNumber = i + 1;
+
+                    const formData = new FormData();
+                    formData.append('file', blob);
+                    uploadPartUrl.searchParams.set('partNumber', partNumber);
+
+                    const uploadPartResponse = await fetch(uploadPartUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    
+                    const uploadPartJson = await uploadPartResponse.json();
+                    const eTag = uploadPartJson.response.ETag;
+
+                    partsData.push({ PartNumber: partNumber, ETag: eTag });
+
+                    console.log(`${i}/${totalParts}: Uploaded part ${partNumber} with eTag ${eTag} `);
+
+                }
+
+
+
+                // 4 finalize the upload
+                const completeUploadUrl = new URL(`${BASE_CF_URL}/completeMultipartUpload`);
+                completeUploadUrl.searchParams.append('key', key);
+                completeUploadUrl.searchParams.append('uploadId', uploadId);
+
+                console.log('partsData', partsData);
+
+                const completeUploadResponse = await fetch(completeUploadUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({ parts: partsData })
+                });
+
+                console.log(await completeUploadResponse.json());
+
+            }
+        </script>
+    </body>
+</html>

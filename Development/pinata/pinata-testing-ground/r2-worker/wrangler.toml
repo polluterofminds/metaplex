@@ -1,0 +1,115 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "r2-worker"
+main = "src/index.ts"
+compatibility_date = "2024-08-06"
+compatibility_flags = ["nodejs_compat"]
+
+# Automatically place your workloads in an optimal location to minimize latency.
+# If you are running back-end logic in a Worker, running it closer to your back-end infrastructure
+# rather than the end user may result in better performance.
+# Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+# [placement]
+# mode = "smart"
+
+# Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
+# Docs:
+# - https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+# Note: Use secrets to store sensitive data.
+# - https://developers.cloudflare.com/workers/configuration/secrets/
+[vars]
+R2_ACCESS_KEY_ID="c11d93fb92a7f556ef558af7bc516280"
+R2_SECRET_ACCESS_KEY="cc1ee8a770387d5ccbdadf444f355b1023b6fe221fbd3951496ff8bd6c64c8a6"
+R2_BUCKET_NAME="privatefiles"
+R2_ACCOUNT_ID="178d3fda8eb7eb5be4c0d076ce2ba7d2"
+R2_ENDPOINT="https://178d3fda8eb7eb5be4c0d076ce2ba7d2.r2.cloudflarestorage.com"
+SUPABASE_SERVICE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhdmtpdm54bmRuenZ0enB0emhnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMzY0Nzk0MSwiZXhwIjoyMDM5MjIzOTQxfQ.BJm2PZx7qPNX08b7YDTPj23PHcpwtJJzTsGvPJBZ8Z8"
+SUPABASE_URL="https://pavkivnxndnzvtzptzhg.supabase.co"
+
+# Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#workers-ai
+# [ai]
+# binding = "AI"
+
+# Bind an Analytics Engine dataset. Use Analytics Engine to write analytics within your Pages Function.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#analytics-engine-datasets
+# [[analytics_engine_datasets]]
+# binding = "MY_DATASET"
+
+# Bind a headless browser instance running on Cloudflare's global network.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#browser-rendering
+# [browser]
+# binding = "MY_BROWSER"
+
+# Bind a D1 database. D1 is Cloudflare’s native serverless SQL database.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#d1-databases
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "files-example"
+database_id = "37bc06e3-9ed4-4cab-a60d-75594bed386b"
+
+# Bind a dispatch namespace. Use Workers for Platforms to deploy serverless functions programmatically on behalf of your customers.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#dispatch-namespace-bindings-workers-for-platforms
+# [[dispatch_namespaces]]
+# binding = "MY_DISPATCHER"
+# namespace = "my-namespace"
+# Supabase Uploads DB Password = xjm.htn@twc7DJH9bfd
+
+# Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
+# Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#durable-objects
+# [[durable_objects.bindings]]
+# name = "MY_DURABLE_OBJECT"
+# class_name = "MyDurableObject"
+
+# Durable Object migrations.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#migrations
+# [[migrations]]
+# tag = "v1"
+# new_classes = ["MyDurableObject"]
+
+# Bind a Hyperdrive configuration. Use to accelerate access to your existing databases from Cloudflare Workers.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#hyperdrive
+# [[hyperdrive]]
+# binding = "MY_HYPERDRIVE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#kv-namespaces
+[[kv_namespaces]]
+binding = "private_files"
+id = "b2272763b1ef44d6aa4f22a357357c88"
+
+# Bind an mTLS certificate. Use to present a client certificate when communicating with another service.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#mtls-certificates
+# [[mtls_certificates]]
+# binding = "MY_CERTIFICATE"
+# certificate_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# Bind a Queue producer. Use this binding to schedule an arbitrary task that may be processed later by a Queue consumer.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#queues
+# [[queues.producers]]
+# binding = "MY_QUEUE"
+# queue = "my-queue"
+
+# Bind a Queue consumer. Queue Consumers can retrieve tasks scheduled by Producers to act on them.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#queues
+# [[queues.consumers]]
+# queue = "my-queue"
+
+# Bind an R2 Bucket. Use R2 to store arbitrarily large blobs of data, such as files.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#r2-buckets
+# [[r2_buckets]]
+# binding = "MY_BUCKET"
+# bucket_name = "my-bucket"
+
+# Bind another Worker service. Use this binding to call another Worker without network overhead.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
+# [[services]]
+# binding = "MY_SERVICE"
+# service = "my-service"
+
+# Bind a Vectorize index. Use to store and query vector embeddings for semantic search, classification and other vector search use-cases.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#vectorize-indexes
+# [[vectorize]]
+# binding = "MY_INDEX"
+# index_name = "my-index"
