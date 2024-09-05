@@ -13,7 +13,7 @@ const Item = (props: ItemProps) => {
   return (
     <div className="w-3/4 flex items-center m-auto py-4">
       {i.product.images.length > 0 ?
-        <img className="mt-4 w-16 h-auto rounded-sm border border-gray-700" src={i.product.images[0].link_small} alt={i.product.name} /> :
+        <img className="w-16 h-auto rounded-sm border border-gray-700" src={i.product.images[0].link_small} alt={i.product.name} /> :
         <div className="w-16 mt-4 h-16 bg-gray-700 rounded-sm" />
       }
       <div className="ml-4">

@@ -34,22 +34,26 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [selectedLanguage, setSelectedLanguage] = useState<Lang>(langArray[0])
 
   useEffect(() => {
-    const fetchedSettings = SettingsService.get();
-    setSettings(fetchedSettings);
+    const getSetting = async () => {
+      const fetchedSettings = await SettingsService.get();
+      setSettings(fetchedSettings);
+  
+      if (fetchedSettings.app.enable_languages) {
+        setLanguages(langArray);
+      }
+  
+      if (!fetchedSettings.app.company_name) {
+        fetchedSettings.app.company_name = fetchedSettings.account.company_name;
+      }
+  
+      const favicon = document.createElement('link');
+      favicon.setAttribute('rel', 'icon');
+      favicon.setAttribute('type', 'image/x-icon');
+      favicon.setAttribute('href', fetchedSettings?.style?.favicon_full || 'public/vite.svg');
+      document.head.appendChild(favicon);
+    }    
 
-    if (fetchedSettings.app.enable_languages) {
-      setLanguages(langArray);
-    }
-
-    if (!fetchedSettings.app.company_name) {
-      fetchedSettings.app.company_name = fetchedSettings.account.company_name;
-    }
-
-    const favicon = document.createElement('link');
-    favicon.setAttribute('rel', 'icon');
-    favicon.setAttribute('type', 'image/x-icon');
-    favicon.setAttribute('href', fetchedSettings?.style?.favicon_full || 'public/vite.svg');
-    document.head.appendChild(favicon);
+    getSetting()
   }, []);
 
   return (

@@ -333,3 +333,26 @@ interface FormattedCustomer {
   date_created: string;
   date_modified: string;
 }
+
+export type FormAddress = {
+  email: string;
+  full_name: string;
+  address_line_one: string;
+  address_line_two: string;
+  city: string;
+  state_or_provinence: string;
+  country: string;
+  postal_code: string;
+}
+
+export type Country = {
+  code: string;
+  name: string;
+}
+
+export type CardDetails = {
+  card: string; 
+  expMonth: string; 
+  expYear: string;
+  cvv: string;
+}
