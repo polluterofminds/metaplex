@@ -35,11 +35,22 @@ export type Products = {
   images?: ProductImages[];
   store_id: number;
   user_id?: string;
+  downloads?: Download[];
+}
+
+export type Download = {
+  id?: number;
+  created_at?: string;
+  product_id: number;
+  user_id: string;
+  download_link: string;
+  size_in_bytes: number;
+  file_name: string;
 }
 
 export type ProductImages = {
   id?: number;
-  created_at: string;
+  created_at?: string;
   product_id: number;
   image_url: string;
 }
