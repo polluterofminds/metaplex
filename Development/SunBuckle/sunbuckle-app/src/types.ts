@@ -59,5 +59,6 @@ export type ProductQuery = {
   name?: string;
   limit?: number;
   offset?: number;
-  includeImages?: boolean
+  includeImages?: boolean;
+  includeDownloads?: boolean;
 }

@@ -65,6 +65,7 @@ export default async function handler(req: NextRequest) {
       const offset = url.searchParams.get('offset');
       const name = url.searchParams.get('name');
       const includeImages = url.searchParams.get('includeImages')
+      const includeDownloads = url.searchParams.get('includeDownloads')
       
       const queryObject: ProductQuery = {} 
       if(name) {
@@ -76,9 +77,11 @@ export default async function handler(req: NextRequest) {
       if(limit) {
         queryObject.limit = parseInt(limit, 10)
       }
-
       if(includeImages) {
         queryObject.includeImages = includeImages === "true" ? true : false;
+      }
+      if(includeDownloads) {
+        queryObject.includeDownloads = includeDownloads === "true" ? true : false;
       }
 
       const stores = await getProducts(authData.user_id, queryObject)

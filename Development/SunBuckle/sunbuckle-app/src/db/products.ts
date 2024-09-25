@@ -24,6 +24,7 @@ export const getProducts = async (userId: string, query?: ProductQuery) => {
   const name = query?.name || null;
   const offset = query?.offset || 0;
   const includeImages = query?.includeImages || false;
+  const includeDownloads = query?.includeDownloads || false;
 
   // Start by selecting from the products table
   let baseQuery: any = supabase
@@ -37,9 +38,13 @@ export const getProducts = async (userId: string, query?: ProductQuery) => {
     baseQuery = baseQuery.eq('name', name);
   }
 
-  // Modify the select statement if includeImages is true
-  if (includeImages) {
-    baseQuery = baseQuery.select('*, product_images(*)'); // Assuming 'images' is a related table or column
+  // Modify the select statement based on includeImages and includeDownloads queries
+  if (includeImages && includeDownloads) {
+    baseQuery = baseQuery.select('*, product_images(*), downloads(*)');
+  } else if (includeImages) {
+    baseQuery = baseQuery.select('*, product_images(*)');
+  } else if (includeDownloads) {
+    baseQuery = baseQuery.select('*, downloads(*)');
   }
 
   const { data, error } = await baseQuery;
@@ -51,14 +56,22 @@ export const getProducts = async (userId: string, query?: ProductQuery) => {
   return data;
 };
 
-export const getProductById = async (id: number, includeImages?: string | null) => {
+export const getProductById = async (id: number, query?: ProductQuery) => {
+  const includeImages = query?.includeImages || false;
+  const includeDownloads = query?.includeDownloads || false;
+
   let baseQuery: any = supabase
     .from('products')
     .select("*")
     .eq('id', id)
 
-  if (includeImages) {
-    baseQuery = baseQuery.select('*, product_images(*)'); // Assuming 'images' is a related table or column
+  // Modify the select statement based on includeImages and includeDownloads queries
+  if (includeImages && includeDownloads) {
+    baseQuery = baseQuery.select('*, product_images(*), downloads(*)');
+  } else if (includeImages) {
+    baseQuery = baseQuery.select('*, product_images(*)');
+  } else if (includeDownloads) {
+    baseQuery = baseQuery.select('*, downloads(*)');
   }
 
   const { data, error } = await baseQuery;
@@ -107,7 +120,7 @@ export const getProductByUserIdAndProductId = async (userId: string, productId: 
     .eq("id", productId)
     .eq("user_id", userId)
 
-  if(error) {
+  if (error) {
     throw error;
   }
 

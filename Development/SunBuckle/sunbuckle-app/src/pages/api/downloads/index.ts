@@ -5,7 +5,7 @@ import { Download, ProductQuery, Products } from '@/types'
 import { getStores, insertStore } from '@/db/stores'
 import { getProducts, insertProduct } from '@/db/products'
 import { insertProductImages } from '@/db/product_images'
-import { insertDownload } from '@/db/downloads'
+import { getDownloads, insertDownload } from '@/db/downloads'
 
 export const config = {
   runtime: 'edge',
@@ -69,7 +69,6 @@ export default async function handler(req: NextRequest) {
       const limit = url.searchParams.get('limit');
       const offset = url.searchParams.get('offset');
       const name = url.searchParams.get('name');
-      const includeImages = url.searchParams.get('includeImages')
       
       const queryObject: ProductQuery = {} 
       if(name) {
@@ -82,12 +81,8 @@ export default async function handler(req: NextRequest) {
         queryObject.limit = parseInt(limit, 10)
       }
 
-      if(includeImages) {
-        queryObject.includeImages = includeImages === "true" ? true : false;
-      }
-
-      const stores = await getProducts(authData.user_id, queryObject)
-      return Response.json({ data: stores })
+      const downloads = await getDownloads(authData.user_id, queryObject)
+      return Response.json({ data: downloads })
     } catch (error) {
       console.log(error);
       return new Response("Server error", {status: 500})

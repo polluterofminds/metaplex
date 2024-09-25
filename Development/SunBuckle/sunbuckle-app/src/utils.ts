@@ -1,3 +1,4 @@
+import { getDownloadsByUserIdAndDownloadId } from "./db/downloads"
 import { getProductImagesByUserIdAndProductId } from "./db/product_images"
 import { getProductByUserIdAndProductId } from "./db/products"
 import { getStoreByUserIdAndStoreId } from "./db/stores"
@@ -31,6 +32,15 @@ export const canMakeChangesToProduct = async (userId: string, productId: number)
 export const canMakeChangesToProductImage = async (userId: string, imageId: number) => {
   const images = await getProductImagesByUserIdAndProductId(userId, imageId)
   if(images && images.length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export const canMakeChangesToDownload = async (userId: string, downloadId: number) => {
+  const downloads = await getDownloadsByUserIdAndDownloadId(userId, downloadId)
+  if(downloads && downloads.length > 0) {
     return true;
   } else {
     return false;

@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { getRequestContext } from '@cloudflare/next-on-pages'
 import { canMakeChangesToProduct, isAuthenticated } from '@/utils'
-import { Products, Store } from '@/types'
+import { ProductQuery, Products, Store } from '@/types'
 import { deleteStore, getStoreById, insertStore, updateStore } from '@/db/stores'
 import { deleteProduct, getProductById, updateProduct } from '@/db/products'
 import { insertProductImages } from '@/db/product_images'
@@ -41,8 +41,14 @@ export default async function handler(req: NextRequest) {
       
       const url = req.nextUrl;
       const includeImages = url.searchParams.get('includeImages')
+      const includeDownloads = url.searchParams.get('includeDownloads')
+
+      const query: ProductQuery = {
+        includeImages: includeImages && includeImages === "true" ? true : false,
+        includeDownloads: includeDownloads && includeDownloads === "true" ? true : false,
+      }
       
-      const product = await getProductById(parseInt(id, 10), includeImages)
+      const product = await getProductById(parseInt(id, 10), query)
       return Response.json({ data: product })
     } catch (error) {
       console.log(error);
